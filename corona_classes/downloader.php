@@ -3,7 +3,7 @@
 class Download {
 
     public $data = null;
-    public $path = 'data.pdf';
+    public $path = __DIR__ .'/data.pdf';
     public $download_url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/';
     public $principal_url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm';
 
@@ -32,15 +32,11 @@ class Download {
             if (!$result) {
                 throw new Exception ("Error with file path or file.");
             } else {
-                echo "Success";
+                echo ">> Success\n";
             }
         } catch (Exception $e) {
-            echo "Downloader FAILED: ".$e->getMessage();
+            echo ">> Downloader FAILED: ".$e->getMessage();
         }
         
     }
 }
-
-
-
-
