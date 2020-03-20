@@ -43,8 +43,6 @@ class Coronavirus {
             $result = preg_split("/[\n]/", $this->comunidades_autonomas);
             $ccaa_array = [];
             if(in_array($type, ['general', 'all', 'ca'])) {
-
-                $ccaa_array[]['ultima_actualización'] = Utils::getLastModifiedFile();
                 
                 foreach ($result as $data) {
                     preg_match('/(?P<ccaa>[A-Za-záéíúóñ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<uci>[0-9.,]+)(?:\s)?(?P<fallecidos>[0-9,.]+)/', $data, $result);
@@ -59,6 +57,7 @@ class Coronavirus {
 
                         if($array['ccaa'] == 'Total') {
                             unset($array['ccaa']);
+                            $array['ultima_actualización'] = Utils::getLastModifiedFile();
                         }
 
                         if(strpos(strtolower($cm_autonoma), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($cm_autonoma)) {
