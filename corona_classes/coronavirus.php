@@ -1,5 +1,6 @@
 <?php
 include 'vendor/autoload.php';
+include 'corona_classes/utils.php';
 
 class Coronavirus {
 
@@ -25,10 +26,10 @@ class Coronavirus {
 
                         $array = [
                             'ccaa' => rtrim($result['ccaa']),
-                            'casos' => (float) $result['casos'],
-                            'ia' => (float) str_replace(',', '.', $result['ia']),
-                            'uci' => (float) $result['uci'],
-                            'fallecidos' => (float) $result['fallecidos']
+                            'casos' => Utils::format_n($result['casos']),
+                            'ia' => $result['ia'],
+                            'uci' => Utils::format_n($result['uci']),
+                            'fallecidos' => Utils::format_n($result['fallecidos'])
                         ];
 
                         if(strpos(strtolower($cm_autonoma), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($cm_autonoma)) {
