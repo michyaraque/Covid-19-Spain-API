@@ -8,8 +8,13 @@ class Coronavirus {
      * @access public
      * @var object
      */
+    
     public $comunidades_autonomas = null;
 
+    /**
+    * El constructor de la clase por defecto parsea el contenido del PDf y lo devuelve en un STRING
+    */
+    
     public function __construct() {
         $parser = new \Smalot\PdfParser\Parser();
         $pdf = $parser->parseFile('data.pdf');
@@ -19,9 +24,7 @@ class Coronavirus {
         $this->comunidades_autonomas = preg_replace(['/	 	/', '/ 	/', '/	/'], [' ', ' ', ''], $text[0]);
     }
 
-    public function getCases( String $type = 'hint', $cm_autonoma = null){
-        
-     /**
+    /**
      * Devuelve la información y datos sobre los casos activos del coronavirus por comunidades autonomas
      *
      * This method is used to retrieve the Covid-19 data from Spain
@@ -31,7 +34,9 @@ class Coronavirus {
      * @param string $cm_autonoma name of the community
      * @return object -> data
      */
-      
+    
+    public function getCases( String $type = 'hint', $cm_autonoma = null){
+              
             $result = preg_split("/[\n]/", $this->comunidades_autonomas);
             $ccaa_array = [];
             if(in_array($type, ['general', 'all', 'ca'])) {
