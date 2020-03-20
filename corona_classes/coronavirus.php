@@ -49,18 +49,21 @@ class Coronavirus {
 
                         $array = [
                             'ccaa' => rtrim($result['ccaa']),
-                            'casos' => Utils::format_n($result['casos']),
-                            'ia' => $result['ia'],
-                            'uci' => Utils::format_n($result['uci']),
+                            'casos_totales' => Utils::format_n($result['casos']),
+                            'casos_graves' => Utils::format_n($result['uci']),
                             'fallecidos' => Utils::format_n($result['fallecidos'])
                         ];
+
+                        if($array['ccaa'] == 'Total') {
+                            unset($array['ccaa']);
+                        }
 
                         if(strpos(strtolower($cm_autonoma), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($cm_autonoma)) {
                             $ccaa_array[] = $array;
 
                         } elseif (empty($cm_autonoma)) {
                             $ccaa_array[] = $array;
-
+                           
                         }
                     }
                 }
