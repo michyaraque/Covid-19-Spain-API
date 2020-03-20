@@ -3,7 +3,11 @@ include 'vendor/autoload.php';
 include 'corona_classes/utils.php';
 
 class Coronavirus {
-
+    
+    /**
+     * @access public
+     * @var object
+     */
     public $comunidades_autonomas = null;
 
     public function __construct() {
@@ -16,6 +20,17 @@ class Coronavirus {
     }
 
     public function getCases( String $type = 'hint', $cm_autonoma = null){
+        
+     /**
+     * Devuelve la información y datos sobre los casos activos del coronavirus por comunidades autonomas
+     *
+     * This method is used to retrieve the Covid-19 data from Spain
+     *
+     * @access public
+     * @param string $type type of the request
+     * @param string $cm_autonoma name of the community
+     * @return object -> data
+     */
       
             $result = preg_split("/[\n]/", $this->comunidades_autonomas);
             $ccaa_array = [];
