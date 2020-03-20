@@ -93,6 +93,6 @@ class Coronavirus {
                     ],
                 ];
             }
-        return json_encode($ccaa_array);
+        return json_encode($ccaa_array, JSON_PRETTY_PRINT);
     }
 }
