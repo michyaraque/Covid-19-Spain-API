@@ -2,6 +2,9 @@
 include 'vendor/autoload.php';
 include 'corona_classes/utils.php';
 
+/**
+* @author Michael Araque
+*/
 class Coronavirus {
     
     /**
@@ -27,11 +30,11 @@ class Coronavirus {
     /**
      * Devuelve la información y datos sobre los casos activos del coronavirus por comunidades autonomas
      *
-     * This method is used to retrieve the Covid-19 data from Spain
+     * Este metodo es usado para obtener los datos de todas las comunidades autonomas de España
      *
      * @access public
-     * @param string $type type of the request
-     * @param string $cm_autonoma name of the community
+     * @param string $type tipo de peticion 'CA', 'HINT'
+     * @param string $cm_autonoma nombre de la comunidad autonoma
      * @return object -> data
      */
     
