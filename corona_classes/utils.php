@@ -3,6 +3,7 @@
 /**
 * @author Michael Araque
 */
+
 class Utils {
 
     /**
@@ -16,7 +17,7 @@ class Utils {
             $value = str_replace('.', '', $value);
             return (integer) $value;
         } else {
-            return '';
+            return 0;
         }
     }
 }
