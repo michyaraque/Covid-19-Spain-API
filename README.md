@@ -23,7 +23,7 @@ $ composer update
 
 ### Cronjob descarga de archivo
 ```sh
-31       11       *       *       *       TZ=Europe/Madrid php /relative_path/download_cron.php
+0       */2       *       *       *       TZ=Europe/Madrid php /relative_path/download_cron.php
 ```
 
 ### Desarrolladores
