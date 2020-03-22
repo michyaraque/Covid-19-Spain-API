@@ -1,5 +1,5 @@
 <?php
-require_once('corona_classes/downloader.php');
+require_once('src/downloader.php');
 
 $down = new Download;
 $down->request($down->getDownloadUrl());
