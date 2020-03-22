@@ -1,6 +1,6 @@
 <?php
 include 'vendor/autoload.php';
-include 'corona_classes/utils.php';
+include 'src/utils.php';
 
 /**
 * @author Michael Araque
@@ -45,7 +45,7 @@ class Coronavirus {
             if(in_array($type, ['general', 'all', 'ca'])) {
                 
                 foreach ($result as $data) {
-                    preg_match('/(?P<ccaa>[A-Za-záéíúóñ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<uci>[0-9.,]+)(?:\s)?(?P<fallecidos>[0-9,.]+)/', $data, $result);
+                    preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<uci>[0-9.,]+)(?:\s)?(?P<fallecidos>[0-9,.]+)/', $data, $result);
                     if(!empty($result['ccaa'])) {
 
                         $array = [
@@ -55,7 +55,7 @@ class Coronavirus {
                             'fallecidos' => Utils::format_n($result['fallecidos'])
                         ];
 
-                        if($array['ccaa'] == 'Total') {
+                        if($array['ccaa'] == 'Total' || $array['ccaa'] == 'ESPAÑA') {
                             unset($array['ccaa']);
                             $array['ultima_actualización'] = Utils::getLastModifiedFile();
                         }
