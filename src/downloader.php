@@ -12,7 +12,7 @@ class Download {
      * @var dir_path
      */
 
-    public $path = __DIR__ .'/data.pdf';
+    public $path = __DIR__ .'/../data.pdf';
     
      /**
      * @access public
