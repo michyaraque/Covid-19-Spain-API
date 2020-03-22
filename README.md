@@ -8,7 +8,7 @@ Covid-19 Spain API es una api no oficial que toma los datos del Ministerio de Sa
   - Api Restful
   - Baja latencia
 
-Probar API con todas sus funcionalidades: [CoronAPI](https://api.chollx.es/coronavirus/coronapi)
+Probar API con todas sus funcionalidades: [CoronAPI](https://api.chollx.es/coronavirus/)
 ### Endpoints 
 
 | Petición GET                                            | Salida                                                       |
