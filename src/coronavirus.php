@@ -42,7 +42,7 @@ class Coronavirus {
      * Este es un pequeño enrutador de url para realizar la escritura de los datos en el navegador sin necesidad de crear los archivos para cada elemento
      * 
      * @access public
-     * @param string $parameter Datos obtenidos a través de la URL
+     * @param string $base_dir Coletilla de url si la api no se encuentra en el directorio principal
      * @var object
      */
 
