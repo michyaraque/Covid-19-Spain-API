@@ -1,6 +1,7 @@
 <?php
 include 'vendor/autoload.php';
 include 'src/utils.php';
+include 'src/exceptions.php';
 
 /**
 * @author Michael Araque
@@ -15,6 +16,13 @@ class Coronavirus {
     public $comunidades_autonomas = null;
 
     /**
+     * @access public
+     * @var object
+     */
+    
+    public $object_ccaa = null;
+
+    /**
     * El constructor de la clase por defecto parsea el contenido del PDf y lo devuelve en un STRING
     */
     
@@ -24,75 +32,137 @@ class Coronavirus {
         $text = $pdf->getText();
         $text = explode('CCAA', $text);
         $text = explode('IA:', $text[1]);
-        $this->comunidades_autonomas = preg_replace(['/	 	/', '/ 	/', '/	/'], [' ', ' ', ''], $text[0]);
+        $text = preg_replace(['/	 	/', '/ 	/', '/	/'], [' ', ' ', ''], $text[0]);
+        $result = preg_split("/[\n]/", $text);
+        $this->comunidades_autonomas = array_filter($result, 'strlen');
     }
 
+
+    /**
+     * Este es un pequeño enrutador de url para realizar la escritura de los datos en el navegador sin necesidad de crear los archivos para cada elemento
+     * 
+     * @access public
+     * @param string $parameter Datos obtenidos a través de la URL
+     * @var object
+     */
+
+    public function router($base_dir = '/coronavirus') {
+
+        $path = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $path = substr($path, strlen($base_dir));
+
+        if(strpos($path, '/ca') !== FALSE) {
+            if(strlen($path) <= 3) {
+                return $this->getCCAA();
+            } else {
+                $array = explode('/', $path);
+                return $this->getCCAA($array[2]);
+            }
+        } elseif($path == '/hint') {
+            return $this->getHint();
+
+        } elseif($path == '/all') {
+            return $this->getAll();
+
+        } elseif($path == '/') {
+            return $this->getHint();
+
+        } else {
+            return CovidHandler::invalidRequest();
+        }
+    } 
+    
     /**
      * Devuelve la información y datos sobre los casos activos del coronavirus por comunidades autonomas
      *
      * Este metodo es usado para obtener los datos de todas las comunidades autonomas de España
      *
      * @access public
-     * @param string $type tipo de peticion 'CA', 'HINT'
-     * @param string $cm_autonoma nombre de la comunidad autonoma
-     * @return object -> data
+     * @param string $ccaa_name nombre de la comunidad autonoma
+     * @return object
      */
-    
-    public function getCases( String $type = 'hint', $cm_autonoma = null){
+
+    public function getCCAA($ccaa_name = null){
               
-            $result = preg_split("/[\n]/", $this->comunidades_autonomas);
-            $ccaa_array = [];
-            if(in_array($type, ['general', 'all', 'ca'])) {
-                
-                foreach ($result as $data) {
-                    preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<uci>[0-9.,]+)(?:\s)?(?P<fallecidos>[0-9,.]+)/', $data, $result);
-                    if(!empty($result['ccaa'])) {
+        $count = count($this->comunidades_autonomas);
+        $object = [];
+            $i = 0;
+            foreach ($this->comunidades_autonomas as $data) {
 
-                        $array = [
-                            'ccaa' => rtrim($result['ccaa']),
-                            'casos_totales' => Utils::format_n($result['casos']),
-                            'casos_graves' => Utils::format_n($result['uci']),
-                            'fallecidos' => Utils::format_n($result['fallecidos'])
-                        ];
+                $result = Utils::parseFile($data);
 
-                        if($array['ccaa'] == 'Total' || $array['ccaa'] == 'ESPAÑA') {
-                            unset($array['ccaa']);
-                            $array['ultima_actualización'] = Utils::getLastModifiedFile();
-                        }
+                if(!empty($result['ccaa'])) {
 
-                        if(strpos(strtolower($cm_autonoma), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($cm_autonoma)) {
-                            $ccaa_array[] = $array;
+                    $array = [
+                        'ccaa' => rtrim($result['ccaa']),
+                        'casos_totales' => Utils::format_n($result['casos']),
+                        'casos_graves' => Utils::format_n($result['uci']),
+                        'fallecidos' => Utils::format_n($result['fallecidos'])
+                    ];
 
-                        } elseif (empty($cm_autonoma)) {
-                            $ccaa_array[] = $array;
-                           
-                        }
+                    if($i >= $count - 1) {
+                        unset($array['ccaa']);
+                        $array['ultima_actualización'] = Utils::getLastModifiedFile();
+                    }
+
+                    if(strpos(strtolower($ccaa_name), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($ccaa_name)) {
+                        $object[] = $array;
+
+                    } elseif (empty($ccaa_name)) {
+                        $object[] = $array;
+                        
                     }
                 }
-            } elseif ($type == "hint") {
-                $ccaa_array = [
-                    [
-                        'nombre' => 'Obtener toda la información',
-                        'descripcion' => 'Obtener toda la información reciente sobre todas Comunidades autonomas de España',
-                        'url' => '/coronapi?type=',
-                        'parametros' => 'ca'
-                    ],
-                    [
-                        'nombre' => 'Información provincial',
-                        'descripcion' => 'Obtener toda la información reciente sobre Comunidades autonomas de España',
-                        'url' => '/coronapi?type=',
-                        'parametros' => 'ca',
-                        'sub_parametro' => '&ca={Comunidad Autonoma}'
-                    ],
-                    [
-                        'nombre' => 'Información provincial',
-                        'descripcion' => 'Obtener toda la información reciente sobre Comunidades autonomas de España',
-                        'url' => '/coronapi?type=',
-                        'parametros' => 'ca',
-                        'sub_parametro' => '&ca=TOTAL'
-                    ],
-                ];
+                $i++;
             }
-        return json_encode($ccaa_array, JSON_PRETTY_PRINT);
+            $this->object_ccaa = $object;
+
+        if(!empty($object)) {
+            return Utils::printJson($object);
+        } else {
+            return CovidHandler::invalidObject();
+        }
+    }
+
+    /**
+     * @access public
+     * @return object Devuelve los datos globales de España
+     */
+
+    public function getAll() {
+        $this->getCCAA();
+        return Utils::printJson(end($this->object_ccaa));
+    }
+
+    /**
+     * @access public
+     * @return object Devuelve una pequeña guia en JSON con los parametros y datos personales
+     */
+
+    public function getHint() {
+            $object = [
+                [
+                    'autor' => 'Michael Araque',
+                    'telegram' => 'https://t.me/michyaraque',
+                    'repositorio' => 'https://github.com/michydev/Covid-19-Spain-API'
+                ],
+                [
+                    'nombre' => 'Obtener toda la información',
+                    'descripcion' => 'Obtener toda la información reciente sobre todas Comunidades autonomas de España',
+                    'url' => '/ca',
+                    'parametros' => 'ca/{Nombre_Comunidad}'
+                ],
+                [
+                    'nombre' => 'Información general de España',
+                    'descripcion' => 'Obtener toda la información reciente sobre Comunidades autonomas de España',
+                    'url' => '/all',
+                ],
+                [
+                    'nombre' => 'Información de Covid-19-Spain API',
+                    'descripcion' => 'Obtener guia sobre parametros disponibles',
+                    'url' => '/hint',
+                ],
+            ];
+        return Utils::printJson($object);
     }
 }
