@@ -83,7 +83,6 @@ class Coronavirus {
      */
 
     public function getCCAA($ccaa_name = null){
-              
         $count = count($this->comunidades_autonomas);
         $object = [];
             $i = 0;
@@ -96,11 +95,13 @@ class Coronavirus {
                     $array = [
                         'ccaa' => rtrim($result['ccaa']),
                         'casos_totales' => Utils::format_n($result['casos']),
+                        'hospitalizados' => Utils::format_n($result['hospitalizados']),
                         'casos_graves' => Utils::format_n($result['uci']),
-                        'fallecidos' => Utils::format_n($result['fallecidos'])
+                        'fallecidos' => Utils::format_n($result['fallecidos']),
+                        'nuevos_respecto_ayer' => Utils::format_n($result['new_cases'])
                     ];
 
-                    if($i >= $count - 1) {
+                    if($i >= $count - 1 || $array['ccaa'] == 'ESPAÑA') {
                         unset($array['ccaa']);
                         $array['ultima_actualización'] = Utils::getLastModifiedFile();
                     }
