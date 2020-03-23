@@ -6,7 +6,22 @@
 
 class Utils {
 
+    /**
+     * @access public
+     * @var string
+     */
+    
     public static $path = './data.pdf';
+
+    /**
+     * @access public
+     * @var string Palabra a cambiar
+     * @return string Palabra en minúscula y sin posibles espacios a la derecha
+     */
+
+    public static function str_lowerise($string) {
+        return strtolower(rtrim($string));
+    }
 
     /**
      * @access public
@@ -39,7 +54,7 @@ class Utils {
      * @return string Devuelve los datos parseados de cada línea de la tabla del PDF
      */
 
-    public static function parseFile($data) {
+    public static function str_parsereg($data) {
         preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<hospitalizados>[0-9.,]+)(?:\s)?(?P<uci>[0-9,.]+)(?:\s(?P<fallecidos>[0-9.,]+)\s(?P<new_cases>[0-9.,]+))?/', $data, $result);
         return $result;
     }
@@ -50,7 +65,7 @@ class Utils {
      * @return object Devuelve el json en formato legible
      */
 
-    public static function printJson($data) {
+    public static function print_obj($data) {
         try {
             if(!empty($data)) {
                 return json_encode($data, JSON_PRETTY_PRINT);
