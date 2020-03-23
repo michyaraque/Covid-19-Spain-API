@@ -101,7 +101,7 @@ class Coronavirus {
             $i = 0;
             foreach ($this->comunidades_autonomas as $data) {
 
-                $result = Utils::parseFile($data);
+                $result = Utils::str_parsereg($data);
 
                 if(!empty($result['ccaa'])) {
 
@@ -118,8 +118,10 @@ class Coronavirus {
                         unset($array['ccaa']);
                         $array['ultima_actualización'] = Utils::getLastModifiedFile();
                     }
+                    
+                    similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa']), $check_similarity);
 
-                    if(strpos(strtolower($ccaa_name), strtolower(rtrim($result['ccaa']))) !== FALSE && !empty($ccaa_name)) {
+                    if(strpos(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa'])) !== FALSE || $check_similarity >= 80 && !empty($ccaa_name)) {
                         $object[] = $array;
 
                     } elseif (empty($ccaa_name)) {
@@ -132,7 +134,7 @@ class Coronavirus {
             $this->object_ccaa = $object;
 
         if(!empty($object)) {
-            return Utils::printJson($object);
+            return Utils::print_obj($object);
         } else {
             return CovidHandler::invalidObject();
         }
@@ -145,7 +147,7 @@ class Coronavirus {
 
     public function getAll() {
         $this->getCCAA();
-        return Utils::printJson(end($this->object_ccaa));
+        return Utils::print_obj(end($this->object_ccaa));
     }
 
     /**
@@ -177,6 +179,6 @@ class Coronavirus {
                     'url' => '/hint',
                 ],
             ];
-        return Utils::printJson($object);
+        return Utils::print_obj($object);
     }
 }
