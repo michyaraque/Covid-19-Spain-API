@@ -1,7 +1,9 @@
 <?php
+
 include 'vendor/autoload.php';
 include 'src/utils.php';
 include 'src/exceptions.php';
+
 
 /**
 * @author Michael Araque
@@ -22,11 +24,23 @@ class Coronavirus {
     
     public $object_ccaa = null;
 
+
+    /**
+     * @access public
+     * @var string
+     */
+
+    public $base_dir = null;
+
     /**
     * El constructor de la clase por defecto parsea el contenido del PDf y lo devuelve en un STRING
+    * @param string $base_dir Coletilla de url si la api no se encuentra en el directorio principal
     */
     
-    public function __construct() {
+    public function __construct($base_dir = '/coronavirus') {
+
+        $this->base_dir = $base_dir;
+        
         $parser = new \Smalot\PdfParser\Parser();
         $pdf = $parser->parseFile('data.pdf');
         $text = $pdf->getText();
@@ -42,14 +56,13 @@ class Coronavirus {
      * Este es un pequeño enrutador de url para realizar la escritura de los datos en el navegador sin necesidad de crear los archivos para cada elemento
      * 
      * @access public
-     * @param string $base_dir Coletilla de url si la api no se encuentra en el directorio principal
      * @var object
      */
 
-    public function router($base_dir = '/coronavirus') {
+    public function router() {
 
         $path = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-        $path = substr($path, strlen($base_dir));
+        $path = substr($path, strlen($this->base_dir));
 
         if(strpos($path, '/ca') !== FALSE) {
             if(strlen($path) <= 3) {
