@@ -119,8 +119,10 @@ class Coronavirus {
                         $array['ultima_actualización'] = Utils::getLastModifiedFile();
                     }
                     
-                    similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa']), $check_similarity);
-
+                    if(!empty($ccaa_name)) {
+                        similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa']), $check_similarity);
+                    }
+                    
                     if(strpos(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa'])) !== FALSE || $check_similarity >= 80 && !empty($ccaa_name)) {
                         $object[] = $array;
 
