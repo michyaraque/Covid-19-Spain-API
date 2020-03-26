@@ -11,7 +11,7 @@ class Utils {
      * @var string
      */
     
-    public static $path = './data.pdf';
+    public static $path = __DIR__ .'/../data.pdf';
 
     /**
      * @access public
@@ -55,7 +55,7 @@ class Utils {
      */
 
     public static function str_parsereg($data) {
-        preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<hospitalizados>[0-9.,]+)(?:\s)?(?P<uci>[0-9,.]+)(?:\s(?P<fallecidos>[0-9.,]+)\s(?P<new_cases>[0-9.,]+))?/', $data, $result);
+        preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.]+)(?:\s)?(?P<ia>[0-9,.]+)(?:\s)?(?P<hospitalizados>[0-9.,]+)(?:\s)?(?P<uci>[0-9,.]+)(?:\s(?P<fallecidos>[0-9.,]+)\s(?P<curados>[0-9.,]+)\s(?P<new_cases>[0-9.,]+))?/', $data, $result);
         return $result;
     }
 

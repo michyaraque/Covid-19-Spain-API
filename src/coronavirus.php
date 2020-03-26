@@ -111,6 +111,7 @@ class Coronavirus {
                         'hospitalizados' => Utils::format_n($result['hospitalizados']),
                         'casos_graves' => Utils::format_n($result['uci']),
                         'fallecidos' => Utils::format_n($result['fallecidos']),
+                        'curados' => Utils::format_n($result['curados']),
                         'nuevos_respecto_ayer' => Utils::format_n($result['new_cases'])
                     ];
 
@@ -119,6 +120,8 @@ class Coronavirus {
                         $array['ultima_actualización'] = Utils::getLastModifiedFile();
                     }
                     
+                    $check_similarity = 0;
+
                     if(!empty($ccaa_name)) {
                         similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa']), $check_similarity);
                     }
