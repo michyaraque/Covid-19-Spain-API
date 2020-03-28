@@ -37,7 +37,7 @@ class Coronavirus {
     * @param string $base_dir Coletilla de url si la api no se encuentra en el directorio principal
     */
     
-    public function __construct($base_dir = '/coronavirus') {
+    public function __construct($base_dir = '/') {
 
         $this->base_dir = $base_dir;
         
