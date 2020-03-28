@@ -15,7 +15,7 @@ Probar API con todas sus funcionalidades: [CoronAPI](https://api.chollx.es/coron
 | Petición GET                                            | Salida                                                       |
 |---------------------------------------------------------|--------------------------------------------------------------|
 | https://api.chollx.es/coronavirus/ca                    | Retorna todos los valores de todas las comunidades autonomas |
-| https://api.chollx.es/coronavirus/ca/{Nombre_Comunidad} | Retorna los valores especificos de una comunidad autonoma, [nombre de comunidades autonomas](https://www.ine.es/daco/daco42/codmun/cod_ccaa.htm)    |
+| https://api.chollx.es/coronavirus/ca/{Nombre_Comunidad} | Retorna los valores especificos de una comunidad autonoma, [nombre de comunidades autonomas](https://administracion.gob.es/pagFront/espanaAdmon/directorioOrganigramas/comunidadesAutonomas/comunidadesAutonomas.htm#.Xn-SEohKiUk)    |
 | https://api.chollx.es/coronavirus/all                   | Retorna los datos oficiales de toda España                   |
 | https://api.chollx.es/coronavirus/hint                  | Retorna una guia en formato JSON de la API                   |
 
