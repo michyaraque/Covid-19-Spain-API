@@ -12,7 +12,7 @@ class Download {
      * @var dir_path
      */
 
-    public $path = __DIR__ .'/../data.pdf';
+    public $path = __DIR__ .'/../data.csv';
     
      /**
      * @access public
@@ -20,22 +20,15 @@ class Download {
      * Url de donde se encuentra la url principal para la descarga
      */
     
-    public $download_url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/';
-    
-     /**
-     * @access public
-     * @var string
-     * Url donde se encuentra el contenido principal dado por el Ministerio de Salud
-     */
-    
-    public $principal_url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm';
+    public $download_url = 'https://covid19.isciii.es/resources/serie_historica_acumulados.csv';
 
     /**
     * La función inicial __construct realiza la primera llamada para obtener el enlace de descarga
     */
     
     public function __construct() {
-        $this->request($this->principal_url);
+        $this->request($this->download_url);
+        $this->saveFile();
     }
 
      /**
@@ -52,16 +45,6 @@ class Download {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $this->data = curl_exec($ch);
         curl_close($ch);
-    }
-
-    /**
-     * @access public
-     * @return Url de descarga directa del archivo PDF
-     */
-    
-    public function getDownloadUrl(){
-        preg_match('/alertasActual\/nCov-China\/documentos\/(?P<name>[^.]+)/', $this->data, $result);
-        return sprintf("%s%s.pdf",$this->download_url, $result['name']);;
     }
 
     /**
