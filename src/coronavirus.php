@@ -9,13 +9,6 @@ include 'src/exceptions.php';
 * @author Michael Araque
 */
 class Coronavirus {
-    
-    /**
-     * @access public
-     * @var object
-     */
-    
-    public $comunidades_autonomas = null;
 
     /**
      * @access public
@@ -40,15 +33,7 @@ class Coronavirus {
     public function __construct($base_dir = '/') {
 
         $this->base_dir = $base_dir;
-        
-        $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile('data.pdf');
-        $text = $pdf->getText();
-        $text = explode('CCAA', $text);
-        $text = explode('IA:', $text[1]);
-        $text = preg_replace(['/	 	/', '/ 	/', '/	/'], [' ', ' ', ''], $text[0]);
-        $result = preg_split("/[\n]/", $text);
-        $this->comunidades_autonomas = array_filter($result, 'strlen');
+
     }
 
 
@@ -96,48 +81,48 @@ class Coronavirus {
      */
 
     public function getCCAA($ccaa_name = null){
-        $count = count($this->comunidades_autonomas);
+
+        $names = ['AN' => 'Andalucía', 'AR' => 'Aragón', 'AS' => 'Asturias', 'IB' => 'Baleares', 'CN' => 'Canarias', 'CB' => 'Cantabria', 'CL' => 'Castilla y León', 'CM' => 'Castilla la Mancha', 'CT' => 'Cataluña', 'VA' => 'C. Valencia', 'CR' => 'Cataluña', 'MU' => 'Murcia', 'ML' => 'Melilla', 'CE' => 'Ceuta', 'VC' => 'C. Valenciana', 'EX' => 'Extremadura', 'GA' => 'Galicia', 'MD' => 'Madrid', 'MC' => 'Murcia', 'NC' => 'Navarra', 'PV' => 'País Vasco', 'RI' => 'La Rioja'];
+
+        $csv = array_map('str_getcsv', file('data.csv'));
+
         $object = [];
-            $i = 0;
-            foreach ($this->comunidades_autonomas as $data) {
+        $i = 0;
+        $count = count($csv);
+        foreach($csv as $data) {
+            if($data[1] == date('d/j/Y') || $data[1] == date('d/n/Y', strtotime("-1 days"))) {
+                $array = ['ccaa' => str_replace($data[0], $names[$data[0]], $data[0]),
+                'casos_totales' => Utils::format_n($data[2]),
+                'hospitalizados' => Utils::format_n($data[3]),
+                'casos_graves' => Utils::format_n($data[4]),
+                'fallecidos' => Utils::format_n($data[5]),
+                'curados' => Utils::format_n($data[6])
+            ];
 
-                $result = Utils::str_parsereg($data);
+                unset($data[1]);
 
-                if(!empty($result['ccaa'])) {
-
-                    $array = [
-                        'ccaa' => rtrim($result['ccaa']),
-                        'casos_totales' => Utils::format_n($result['casos']),
-                        'hospitalizados' => Utils::format_n($result['hospitalizados']),
-                        'casos_graves' => Utils::format_n($result['uci']),
-                        'fallecidos' => Utils::format_n($result['fallecidos']),
-                        'curados' => Utils::format_n($result['curados']),
-                        'nuevos_respecto_ayer' => Utils::format_n($result['new_cases'])
-                    ];
-
-                    if($i >= $count - 1 || $array['ccaa'] == 'ESPAÑA') {
-                        unset($array['ccaa']);
-                        $array['ultima_actualización'] = Utils::getLastModifiedFile();
-                    }
-                    
-                    $check_similarity = 0;
+                $check_similarity = 0;
 
                     if(!empty($ccaa_name)) {
-                        similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa']), $check_similarity);
+                        similar_text(Utils::str_lowerise($ccaa_name), Utils::str_lowerise(str_replace($data[0], $names[$data[0]], $data[0])), $check_similarity);
                     }
                     
-                    if(strpos(Utils::str_lowerise($ccaa_name), Utils::str_lowerise($result['ccaa'])) !== FALSE || $check_similarity >= 80 && !empty($ccaa_name)) {
+                    if(strpos(Utils::str_lowerise($ccaa_name), Utils::str_lowerise(str_replace($data[0], $names[$data[0]], $data[0]))) !== FALSE || $check_similarity >= 80 && !empty($ccaa_name)) {
                         $object[] = $array;
 
                     } elseif (empty($ccaa_name)) {
                         $object[] = $array;
                         
                     }
-                }
-                $i++;
             }
-            $this->object_ccaa = $object;
+            if($i >= $count - 1) {
+                $object[] = ['Última actualización' => Utils::getLastModifiedFile()];
+            }
+            $i++;
+        }
 
+        $this->object_ccaa = $object;
+        
         if(!empty($object)) {
             return Utils::print_obj($object);
         } else {
