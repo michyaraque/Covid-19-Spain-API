@@ -23,14 +23,6 @@ Probar API con todas sus funcionalidades: [CoronAPI](https://api.chollx.es/coron
 
 Esta API requiere [PHP 7.4+](https://www.php.net/releases/7_4_0.php) para funcionar.
 
-Se deben instalar las dependencias via Composer.
-
-```sh
-$ composer install
-$ composer update smalot/pdfparser
-$ composer update
-```
-
 ### Cronjob descarga de archivo
 Programado para actualizarse cada dos horas
 ```sh
