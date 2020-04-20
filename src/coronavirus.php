@@ -1,6 +1,5 @@
 <?php
 
-include 'vendor/autoload.php';
 include 'src/utils.php';
 include 'src/exceptions.php';
 
