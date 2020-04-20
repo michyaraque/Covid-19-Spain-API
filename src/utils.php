@@ -11,7 +11,7 @@ class Utils {
      * @var string
      */
     
-    public static $path = __DIR__ .'/../data.pdf';
+    public static $path = __DIR__ .'/../data.csv';
 
     /**
      * @access public
@@ -52,17 +52,6 @@ class Utils {
      /**
      * @access public
      * @return string Devuelve los datos parseados de cada línea de la tabla del PDF
-     */
-
-    public static function str_parsereg($data) {
-        preg_match('/(?P<ccaa>[A-Za-záéíúóñÑ. -]+)(?:\s)?(?P<casos>[0-9.¥]+)(?:\s)?(?P<ia>[0-9,.¥]+)(?:\s)?(?P<hospitalizados>[0-9.,¥]+)(?:\s)?(?P<uci>[0-9,.¥]+)(?:\s(?P<fallecidos>[0-9.,¥]+)\s(?P<curados>[0-9.,¥]+)\s(?P<new_cases>[0-9.,¥]+))?/', $data, $result);
-        return $result;
-    }
-
-     /**
-     * @access public
-     * @param @data Objeto que se envia en la petición de la función
-     * @return object Devuelve el json en formato legible
      */
 
     public static function print_obj($data) {
