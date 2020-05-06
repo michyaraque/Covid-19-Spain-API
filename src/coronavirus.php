@@ -89,13 +89,15 @@ class Coronavirus {
         $i = 0;
         $count = count($csv);
         foreach($csv as $data) {
-            if($data[1] == date('d/j/Y') || $data[1] == date('d/n/Y', strtotime("-1 days"))) {
+            if($data[1] == date('j/n/Y') || $data[1] == date('j/n/Y', strtotime("-1 days"))) {
                 $array = ['ccaa' => str_replace($data[0], $names[$data[0]], $data[0]),
                 'casos_totales' => Utils::format_n($data[2]),
-                'hospitalizados' => Utils::format_n($data[3]),
-                'casos_graves' => Utils::format_n($data[4]),
-                'fallecidos' => Utils::format_n($data[5]),
-                'curados' => Utils::format_n($data[6])
+                'pcr' => Utils::format_n($data[3]),
+                'test_ac' => Utils::format_n($data[4]),
+                'hospitalizados' => Utils::format_n($data[5]),
+                'casos_graves' => Utils::format_n($data[6]),
+                'fallecidos' => Utils::format_n($data[7]),
+                'curados' => Utils::format_n($data[8])
             ];
 
                 unset($data[1]);
